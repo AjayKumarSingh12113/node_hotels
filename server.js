@@ -1,6 +1,8 @@
 let express = require('express');
 let app = express();
 const db = require('./db.js');
+require('dotenv').config();
+const Port = process.env.PORT || 3000;
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());//req.body
@@ -12,7 +14,7 @@ const Menurouter = require('./routers/MenuRoutes.js');
 app.use('/menu',Menurouter);
 
 
-app.listen(3000 ,()=> console.log("server is start")
+app.listen(Port,()=> console.log("server is start")
 )
 
 
