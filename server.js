@@ -3,15 +3,29 @@ let app = express();
 const db = require('./db.js');
 require('dotenv').config();
 const Port = process.env.PORT || 3000;
+const passport = require('./Auth.js');
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());//req.body
 
+const logRequest=(req,res,next)=>{//middle function
+    //console.log(`[${new Date().toLocaleString()}] request made to : ${req.originalUrl}`);
+    next();
+}
+app.use(logRequest);//sare le laga diya hai 
+
+app.use(passport.initialize());
+const localAuthMiddleware =passport.authenticate('local',{ session: false })
+app.get('/',(req,res)=>{
+    res.send("world is very beautiful");
+})
+
 const Personrouter = require('./routers/PersonRoutes.js')
-app.use('/person',Personrouter);
+app.use('/person',localAuthMiddleware,Personrouter);
 
 const Menurouter = require('./routers/MenuRoutes.js');
 app.use('/menu',Menurouter);
+
 
 
 app.listen(Port,()=> console.log("server is start")
